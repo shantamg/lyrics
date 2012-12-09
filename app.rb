@@ -1,6 +1,5 @@
 require 'sinatra'
 require 'haml'
-require 'mechanize'
 
 get '/' do
   @lyrics = []
