@@ -9,5 +9,8 @@
       %input{:type => "text", :name => "query", :class => "text"}
       %input{:type => "submit", :value => "Search", :class => "button"}
     %h2=@title
-    -@lyrics.each do |line|
-      
+    -puts @lyrics.inspect
+    -@lyrics.each do |key, chunk|
+      -chunk.each do |num, line|
+        ="#{line}<br>"
+      %br

@@ -1,8 +1,8 @@
 require 'sinatra'
-require 'haml'
+require 'mechanize'
 
 get '/' do
-  @lyrics = []
+  @lyrics = {}
   haml :index
 end
 
@@ -16,14 +16,16 @@ post '/' do
   page = agent.get(page.at('#ires ol a').attribute('href'))
   @title = page.title
   chunks = page.at('#lyrics-body').to_html.split '<br>'
-  @lyrics = []
+  @lyrics = Hash.new { |l, k| l[k] = Hash.new(&l.default_proc) }
+  i = 0
   chunks.each do |chunk|
+    l = 0
     n = Nokogiri::HTML(chunk)
     n.content.lines.each do |line|
-      if !line.strip.empty?
-        @lyrics << line.strip unless line.include? 'metrolyrics'
-      end
+      @lyrics[i][l] = line.strip unless line.include? 'metrolyrics' || line.strip.empty?
+      l += 1
     end
+    i += 1
   end
   haml :index
 end
